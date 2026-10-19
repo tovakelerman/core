@@ -1,0 +1,16 @@
+@core_HostAddress = http://localhost:5166
+
+GET {{core_HostAddress}}/api/books
+Accept: application/json
+
+###
+
+POST {{core_HostAddress}}/api/books
+Content-Type: application/json
+
+{
+  "title": "כותרת",
+  "author": "שם מלא 1"
+}
+
+###
