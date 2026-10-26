@@ -1,0 +1,31 @@
+namespace books.Middleware;
+
+public class StoreClosedMiddleware
+{
+    private readonly RequestDelegate next;
+
+    public StoreClosedMiddleware(RequestDelegate next)
+    {
+        this.next = next;
+    }
+
+public async Task Invoke(HttpContext context,IConfiguration config)
+{
+    if(config.GetValue<bool>("StoreClosed"))
+    {
+      context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable; // 503
+      context.Response.ContentType = "text/plain";
+      await context.Response.WriteAsync("The store is closed. Please come back later.")
+      return;
+    }
+
+    await next.Invoke(context);
+}
+
+public static partial class MiddlewareExtensions
+{
+    public static IApplicationBuilder UseKitchenClosed(this IApplicationBuilder builder)
+        => builder.UseMiddleware<StoreClosedMiddleware>();
+}
+
+}
